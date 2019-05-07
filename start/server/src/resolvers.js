@@ -21,7 +21,8 @@ module.exports = {
     },
     launch: (_, { id }, { dataSources }) =>
       dataSources.launchAPI.getLaunchById({ launchId: id }),
-    me: (_, __, { dataSources }) => dataSources.userAPI.findOrCreateUser()
+    me: (_, __, { dataSources }) => dataSources.userAPI.findOrCreateUser(),
+    hello: () => {return "hello world"}
   },
   
   Mission: {

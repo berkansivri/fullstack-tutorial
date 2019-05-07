@@ -5,6 +5,7 @@ const typeDefs = gql`
     launches(pageSize: Int, after: String): LaunchConnection!
     launch(id: ID!): Launch
     me: User
+    hello: String
   }
 
   type LaunchConnection { # add this below the Query type as an additional type.
