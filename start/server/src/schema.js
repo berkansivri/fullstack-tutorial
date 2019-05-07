@@ -2,7 +2,8 @@ const { gql } = require("apollo-server");
 
 const typeDefs = gql`
   type Query {
-    launches(pageSize: Int, after: String): LaunchConnection!
+    # launches(pageSize: Int, after: String): LaunchConnection!
+    launches: [Launch]!
     launch(id: ID!): Launch
     me: User
     hello: String
