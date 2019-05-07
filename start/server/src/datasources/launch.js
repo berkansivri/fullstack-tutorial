@@ -13,12 +13,13 @@ class LaunchAPI extends RESTDataSource {
 
   async getLaunchById({ launchId }) {
     const response = await this.get('launches', {flight_number: launchId});
+    
     return this.launchReducer(response[0]);
   }
   
-  getLaunchByIds({ launchIds }) {
+  getLaunchesByIds({ launchIds }) { 
     return Promise.all(
-      launchIds.map(Id => this.getLaunchById(Id))
+      launchIds.map(launchId => this.getLaunchById({ launchId }))
     );
   }
 
@@ -40,7 +41,5 @@ class LaunchAPI extends RESTDataSource {
     };
   }
 }
-
-
 
 module.exports = LaunchAPI;
