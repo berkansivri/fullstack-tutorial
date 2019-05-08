@@ -22,7 +22,7 @@ module.exports = {
     launches: async (_, __, { dataSources }) => dataSources.launchAPI.getAllLaunches(),
     launch: (_, { id }, { dataSources }) => dataSources.launchAPI.getLaunchById({ launchId: id }),
     me: (_, __, { dataSources }) => dataSources.userAPI.findOrCreateUser(),
-    hello: () => {return "hello world"}
+    hello: () => {return "SpaceX Api to GraphQL Demo"}
   },
   
   Mission: {
@@ -33,7 +33,7 @@ module.exports = {
     }
   },
   Launch: {
-    isBooked: async (_, __, { dataSources }) =>
+    isBooked: async (launch, __, { dataSources }) =>
       dataSources.userAPI.isBookedOnLaunch({ launchId: launch.id })
   },
 

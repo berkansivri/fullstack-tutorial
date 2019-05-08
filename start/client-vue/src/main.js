@@ -3,6 +3,7 @@ import App from "./App.vue";
 import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
+import VTooltip from 'v-tooltip'
 import VueApollo from 'vue-apollo'
 
 Vue.config.productionTip = false;
@@ -17,6 +18,7 @@ const apolloClient = new ApolloClient({
 });
 
 Vue.use(VueApollo);
+Vue.use(VTooltip);
 
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient

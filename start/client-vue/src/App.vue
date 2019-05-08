@@ -5,53 +5,104 @@
     <p>{{hello}}</p>
     <div role="group">
       <button type="button" @click="getLaunches">Get Launches</button>
-      <button type="button">Get Launch By Id</button>
-      <button type="button">Me</button>
+      <v-popover popoverClass="popClass">
+        <button>Get Launch By Id</button>
+        <template slot="popover">
+          <input class="tooltip-content" placeholder="Enter Id" v-model="launchId" />
+          <button v-close-popover type="button" @click="getLaunch">Ok</button>
+        </template>
+      </v-popover>
     </div>
-    <p v-for="launch in launches">{{launch.site}}</p>
+    <br>
+    <table style="width:100%" v-if="launches.length > 0">
+      <tr>
+        <th v-for="head in headers" :key="head">{{head}}</th>
+      </tr>
+      <tr v-for="launch in launches" :key="launch.id">
+        <td>{{launch.id}}</td>
+        <td>{{launch.site}}</td>
+        <td>{{launch.mission.name}}</td>
+        <td>{{launch.rocket.name}}</td>
+        <td>{{launch.isBooked}}</td>
+      </tr>
+    </table>
   </div>
 </template>
 
 <script>
 import gql from "graphql-tag";
-
 export default {
-  name: "app",
+
   data() {
     return {
+      launches: {},
       launch: {},
-      launches: {}
+      headers: [],
+      launchId: "",
     };
   },
   methods: {
-    getLaunches() {
-      console.log("get");
-      var data = this.$apollo.query({
+    async getLaunches() {
+      var response = await this.$apollo.query({
         query: gql`
           query {
             launches {
+              id
               site
+              mission {
+                name
+              }
+              rocket {
+                name
+                type
+              }
+              isBooked
             }
           }
         `
       });
-      console.log(data.then(val => {console.log(val)}));
-      // console.log(data);
-    }
+      this.headers = Object.getOwnPropertyNames(
+        response.data.launches[0]
+      ).filter(x => !x.includes("_"));
+      this.launches = response.data.launches;
+    },
+
+    async getLaunch() {
+      this.launches = [];
+      var response = await this.$apollo.query({
+        query: gql`
+          query($id: ID!) {
+            launch(id: $id) {
+              id
+              site
+              mission {
+                name
+              }
+              rocket {
+                name
+                type
+              }
+              isBooked
+            }
+          }
+        `,
+        variables: {
+          id: this.launchId
+        }
+      });
+      this.headers = Object.getOwnPropertyNames(response.data.launch).filter(
+        x => !x.includes("_")
+      );
+      this.launches.push(response.data.launch);
+    }, 
   },
+
   apollo: {
     hello: gql`
       query {
         hello
       }
-    `,
-    launch: gql`
-      query {
-        launch(id: 1) {
-          site
-        }
-      }
-    `, 
+    `
   }
 };
 </script>
@@ -64,5 +115,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.v-popover {
+  display: inline-block !important;
 }
 </style>
